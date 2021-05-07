@@ -1,0 +1,494 @@
+/* cookbook.js
+   Lisa Guinn 2021
+*/
+
+/* try to stop the user agent from screwing things up */
+html, body, div, h1, h2, h3, h4, h5, h6, p, a, img, i, center,
+ol, ul, li, fieldset, form, label, table, caption, tbody, tfoot, 
+thead, tr, th, td, figure, figcaption, footer, header, nav, output,
+section {
+ 	margin: 0;
+ 	padding: 0;
+ 	border: 0;
+ 	font-size: 1vw;
+ 	font: inherit;
+    text-indent: 0em;
+ 	vertical-align: baseline;  
+ }
+
+body{
+    background-color:#f0dcca;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2vw;
+    color: #000000;
+    margin: 1%;  
+    padding: 1% 2% 1% 2%;
+	min-height: 100vh;
+    min-width: 350px;
+    display: flex;
+	flex-direction: column;
+}
+
+figure {
+    margin-bottom: 2%;
+}
+
+figure img {
+    display: block;
+    margin: 1%;
+    width: 95%;
+}
+
+footer {
+    flex-grow: 1;
+    display: block;
+}
+
+header{
+	background-color: #cdc6a5;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    padding: 1%;
+}
+
+header a {
+    width: 22%;
+}
+
+header img {
+    width: 95%;
+}
+
+hr { 
+    background-color: #696d7d; 
+    border-style: inset;
+}
+
+h1{
+    font-size:  4vw;
+    text-align: center;
+    margin: 0;
+    width:75%;
+}
+
+h2 {
+    font-size:  3vw;
+    padding: 2% 0% 3% 0%;
+}
+
+h3 {
+    font-size: 3vw;
+    color: #6f9283;
+}
+
+input {
+    margin: 1%;
+}
+
+main {
+    flex-grow: 8;
+}
+
+th {
+    color: #6f9283;
+    font-size: 2vw;
+    padding: 1%;
+    text-align: left;
+}
+
+td {
+    border-top: 1px solid #6f9283;
+    border-bottom: 1px solid #6f9283;
+    border-collapse: collapse;
+    color: #000000;
+    font-size: 2vw;
+    padding: 1%;
+    text-align: left;
+    vertical-align: middle;
+}
+
+ul {
+    padding-left: 4%;
+}
+
+.categories h3 {
+    color: #3a3d46;
+}
+
+.right-panel * { margin: 2%;}
+
+#category-heading {
+    color: #f0dcca;
+}
+
+#category-name {
+    font-size:  4vw;
+}
+
+/* the columns on the category.html table */
+#col1 {
+    width: 20%;
+}
+
+#col2 {
+    width: 50%;
+}
+
+#col3 {
+    width: 20%;
+}
+
+#favList {
+    overflow: auto;
+}
+
+#favList figure {
+    width: 90%;
+    margin-left: 4%;
+    border: 2px solid #ffffff;
+    display: block;
+}
+
+#fav-recipes * { 
+    display:block;
+    margin: 2%;
+}
+
+#ingredients-table * {
+    border: none;
+    border-collapse: collapse;
+}
+
+#ingredients-table td:first-child { /* the first column in the table */
+    width: 15%;
+    text-align: right;
+}
+
+#ingredients-table td:last-child { /* the third column in the table */
+    width: 65%;
+}
+
+#intro figure {
+    display: inline-block;
+    width: 20%;
+}
+
+#intro p {
+    display: inline-block;
+    width: 60%;
+}
+
+#recipe-footer {
+    margin-top: 2%;
+    max-height: 10vh;
+    overflow: auto;
+    width: 95%;
+}
+
+#results-body img {
+    width: 90%;
+}
+
+#results table {
+    border-collapse: collapse;
+}
+
+#search-button {
+    color:#ffffff;
+    background-color: #6f9283;
+    border-color: #696d7d;
+    border-width: 1px;
+    height: 2vh;
+    width: 25%;
+    min-width: 3em;
+    min-height: 2em;
+}
+
+/*set the width for the input fields on the search form */
+
+#name {
+    width:70%;
+}
+
+#categories {
+    width: 77%;
+}
+
+#tags {
+    width:80%;
+}
+
+#words {
+    width:73%;
+}
+
+/* *********** Things that will vary across mediatypes **************** */
+/* Mobile is the default */
+
+figcaption {
+    font-size: 1.5vw;
+}
+
+footer p {
+    font-size: 1.5vw;
+}
+
+p {
+    color: #000000;
+    font-size: 2vw;
+    margin-bottom: 1%;
+}
+
+.intro-link {
+    background:#6f9283;
+    border-color: #696d7d;
+    border-radius: 5px;
+    border-width: 1px;
+    color: #ffffff;
+    display: inline-block;
+    font-size: 1.5vw;
+    margin-left: 3%;
+    min-width: 3vw;
+    min-height: 2vw;
+    padding:2%;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    width: 21%;
+}
+
+.footer-link {  
+    background-color: #696d7d;
+    border-color: #696d7d;
+    border-radius: 5px;
+    border-width: 1px;
+    color:#ffffff;
+    display: inline-block;
+    font-size: 1.5vw;
+    margin: 0% 3%;
+    min-width: 2vw;
+    min-height: 1vw;
+    padding: 2%;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    width: 30%;
+}
+
+.left-panel {
+    display: inline-block;
+    background-color: #cdc6a5;
+    width: 30%;
+    min-width: 100px;
+    vertical-align: top;
+}
+
+.right-panel {
+    display: inline-block;
+    background-color: #6f9283;
+    width: 60%;
+    vertical-align: top;
+}
+
+.recipe-left {
+    display: inline-block;
+    width: 95%;
+    min-width: 7em;
+    vertical-align: top;
+}
+
+#recipe-footer p {
+    font-size:  2vw;
+    font-style: italic;
+}
+
+#recipe-intro p {
+    font-size: 2vw;
+    font-style: italic;
+}
+
+#recipe-separator {
+    display: block;
+}
+
+.recipe-right {
+    display: inline-block;
+    margin: 4px 0px 0px 0px;
+    width: 95%;
+    vertical-align: top;
+}
+
+#ingredients-table td {
+    font-size: 2vw;
+}
+
+#intro figure {
+    display: none;
+}
+
+#intro p {
+    display: inline-block;
+    width: 90%;
+}
+
+#recipe-pic-block {
+    display: none;
+}
+
+#recipe-heading {
+    display: block;
+    width: 95%;
+}
+
+#recipe-pic-bottom {
+    display: block;
+}
+
+#recipe-pic-end {
+    width: 95%;
+    padding: 2%;
+}
+
+/* ******************************************************************************* */
+/* Medium sized devices like tablets or small screens */
+@media screen and (min-width:650px) {
+
+    .recipe-left {
+        width: 40%;
+    }
+    
+    .recipe-right {
+        width: 55%;
+    }
+
+    #recipe-separator { display: none; }
+
+    #ingredients-table td {
+        font-size: 1.5vw;
+    }
+
+    #intro figure {
+        display: inline-block;
+        width: 20%;
+        vertical-align: top;
+    }
+    
+    #intro p {
+        display: inline-block;
+        font-size: 1.5vw;
+        width: 66%;
+        vertical-align: top;
+    }
+
+    #recipe-pic-block {
+        display: inline-block;
+        width: 20%;
+        vertical-align: middle;
+    }
+
+    #recipe-pic {
+        width: 95%;
+        padding: 2%;
+    }
+
+    #recipe-pic-bottom {
+        display: none;
+    }
+
+    #recipe-heading {
+        display: inline-block;
+        width: 77%;
+        vertical-align: middle;
+    }
+}
+
+/* ******************************************************************************* */
+/* Screens */
+
+@media screen and (min-width:1024px) {
+
+    figcaption {
+        font-size: 1vw;
+    }
+    
+    footer p {
+        font-size:  1vw;
+    }
+
+    p {
+        font-size: 1.5vw;
+    }
+
+    .recipe-left {
+        max-width: 15em;
+    }
+
+   .left-panel {
+        width: 25%;
+        max-width: 25em;
+    }
+
+    .right-panel {
+        width: 65%;
+    }
+
+    .intro-link {
+        margin-left: 6%;
+        width: 20%;
+    }
+
+    #recipe-footer p {
+        font-size:  1.4vw;
+        font-style: italic;
+    }
+
+    #recipe-intro p {
+        font-size: 1.5vw;
+        font-style: italic;
+    }
+
+}
+
+/* ******************************************************************************* */
+/* Printing  */
+
+@media print {
+
+    body{
+        background-color: #ffffff;
+    }
+
+    .footer-link {
+        display: none;
+    }
+
+    .intro-link {
+        display: none;
+    }
+
+    .recipe-left {
+        display: block;
+        width: 95%;
+    }
+    
+    .recipe-right {
+        display: block;
+        width: 95%;
+    }
+
+    #recipe-pic-block {
+        display: inline-block;
+        width: 20%;
+        vertical-align: middle;
+    }
+
+    #recipe-pic-bottom {
+        width: 25%;
+        padding: 2%;
+    }
+
+    #recipe-pic {
+        display: none;
+    }
+}

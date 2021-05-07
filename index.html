@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cooking at Our House</title>
+        <link rel="icon" type="image/png" href="img/favicon.png" >
+        <link rel="stylesheet" href="css/cookbook.css">
+        <script src="https://kit.fontawesome.com/a3431cee10.js" crossorigin="anonymous"></script>
+        <script src = "js/cookbook.js"></script>
+    </head>
+    <body onload="initIndex()">
+        <header>
+            <a href="index.html">
+                <img id="logo" src="img/logo-transparent.png" alt="Logo">
+            </a>
+            <h1>Cooking at Our House</h1>
+        </header>
+        <main>
+            <section id="intro">
+                <h2>Welcome to the 4th Edition!</h2>
+                <figure>
+                    <img src="https://storage.googleapis.com/recipe-photos/authorwithcookbook.jpg" alt="Cookbook and Author">
+                    <figcaption>The cookbook and the author</figcaption>
+                </figure>
+                <p>
+                    In 2000, I published the first print edition of <b>Cooking at Our House</b>. I
+                    never imagined that I would still be doing this 21 years later. I also didn't realize
+                    how expensive it would be to update and reprint the cookbook over time.<br/>
+                    As of April 2021, I am taking the first steps to publish this on the web. I hope this 
+                    collection of family heirlooms and personal favorites continues to be useful!
+                </p>
+            </section>
+            <div>
+                <a href="intro1.html" class="intro-link">Read intro to 1st edition</a>
+                <a href="intro2.html" class="intro-link">Read intro to 2nd edition</a>
+                <a href="intro3.html" class="intro-link">Read intro to 3rd edition</a>
+            </div>
+            <hr>
+            <section>
+                <div id="fav-recipes" class="left-panel">
+                    <h3>Favorite Recipes</h3>
+                    <p>Click on a picture to see the recipe</p>
+                    <div id="favList">
+                        <!-- filled by the javascript that inits the page-->
+                    </div>
+                </div>
+                <div id="tabs" class="right-panel">
+                    <div class="categories">
+                        <h3 id="category-heading">Recipe Categories</h3>
+                        <ul id="categoryList">
+                            <!-- filled by the javascript that inits the page -->
+                        </ul>
+                    </div>
+                    <hr>
+                    <div id="search">
+                        <a href="search.html">Search for recipes&nbsp; <i class="fas fa-search"></i></a>
+                    </div>
+                    <hr>
+                    <div id="index">
+                            <p>Index is not implemented, but it will be a link to an index page</p>
+                            <!-- <a href="recipeindex.html">Index</a> -->
+                            <a href="index.html">Index</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <hr>
+            <p>&copy; 2021 - Copyright Lisa Guinn. All rights reserved.</p>
+            <a href="#" class="footer-link">Back to top</a>
+        </footer>
+    </body>
+</html>

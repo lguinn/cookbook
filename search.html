@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cooking at Our House</title>
+        <link rel="icon" type="image/png" href="img/favicon.png" >
+        <link rel="stylesheet" href="css/cookbook.css">
+        <script src="https://kit.fontawesome.com/a3431cee10.js" crossorigin="anonymous"></script>
+        <script defer src = "js/cookbook.js"></script>
+    </head>
+    <body>
+        <header>
+            <a href="index.html">
+                <img id="logo" src="img/logo-transparent.png" alt="Logo">
+            </a>
+            <h1>Cooking at Our House</h1>                                 
+        </header>
+        <main>
+            <section>
+                <h2> <i class="fas fa-search"></i>&nbsp;Search</h2>
+                <form>
+                    <fieldset>
+                        <label>Words in recipe name<input type='text' id='name' name='name'></label><br/>
+                        <label>Categories<input type='text' id='categories' name='categories'></label><br/>
+                        <label>Tags<input type='text' id='tags' name='tags'></label><br/>
+                        <label>Words anywhere<input type='text' id='words' name='words'></label><br/>
+                        <input id="search-button" type='submit' value="Start search">
+                    </fieldset>
+                </form>
+                <p class="tips">Search tips: You can put multiple words in any text box on the form above. Put spaces 
+                    between words. For categories and tags, it will find recipes in any of the categories or tags listed.
+                    For words, all the words must be present.
+                </p>
+            </section>
+            <hr>
+            <section class="results">
+                <h2>Search Results</h2>
+                <p>Search isn't implemented yet.</p>
+                <div id="results">
+                    <table> 
+                         <thead id="results-heading">
+                             <tr>
+                                 <th>Name</th><th>Categories</th><th>Tags</th>
+                             </tr>
+                         </thead>
+                         <tbody id="results-body">
+                            <tr>
+                                <td>Placeholder for Recipe Name as clickable link</td>
+                                <td>Placeholder for Recipe Categories</td>
+                                <td>Placeholder for Recipe Tags</td>
+                            </tr>
+                         </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <hr>
+            <p>&copy; 2021 - Copyright Lisa Guinn. All rights reserved.</p>
+            <a href="#" class="footer-link">Back to top</a>
+            <a href="index.html" class="footer-link">Back to Home</a>
+        </footer>
+    </body>
+</html>
