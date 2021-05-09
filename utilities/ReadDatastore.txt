@@ -1,0 +1,98 @@
+// from training-data-analyst/courses/developingapps/v1.2/nodejs/datastore/
+
+// Copyright 2017, Google, Inc.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+'use strict';
+
+const config = require('../config');
+
+const {Datastore} = require('@google-cloud/datastore');
+
+// The Datastore(...) factory function 
+// The projectId is retrieved from the config module. This
+// module retrieves the project ID from the GCLOUD_PROJECT
+// environment variable.
+
+const ds = new Datastore( { projectId: config.get('GCLOUD_PROJECT') } );
+
+const kind = 'Question';
+
+/* The create({quiz, author, title, answer1, answer2,
+// answer3, answer4, correctAnswer}) function uses an
+// ECMAScript 2015 destructuring assignment to extract
+// properties from the form data passed to the function */
+
+function create({ quiz, author, title, answer1, answer2, answer3, answer4, correctAnswer }) {
+
+  const key = ds.key(kind);
+  const entity = { key, data: [
+    { name: 'quiz', value: quiz },
+    { name: 'author', value: author },
+    { name: 'title', value: title },
+    { name: 'answer1', value: answer1 },
+    { name: 'answer2', value: answer2 },
+    { name: 'answer3', value: answer3 },
+    { name: 'answer4', value: answer4 },
+    { name: 'correctAnswer', value: correctAnswer },
+  ] }
+
+  return ds.save(entity);
+}
+
+// Lists all questions in a Quiz (defaults to 'gcp').
+// Returns a promise
+
+function list(quiz = 'gcp') {
+
+    const query = ds.createQuery('Question').filter('quiz', quiz);
+    const promised_result = ds.runQuery(query);
+
+    return promised_result.then(([results, { moreResults, endCursor }]) => {
+      const questions = results.map(item => {   //For each question returned from Datastore
+        item.id = item[Datastore.KEY].id;       //  Add an id property using the Entity id
+        delete item.correctAnswer;              //  Remove the correct answer info
+        return item;                            //  return the transformed item
+      });
+      return {
+        questions,                              // return the questions, along with
+        nextPageToken: moreResults != 'NO_MORE_RESULTS' ? endCursor : false // a token to paginate to next results or false if no more
+      }; 
+   });
+}
+  // TODO: Return the transformed results
+  // Cloud Datastore returns the query response as an array. 
+  // The first element references the data [results] the second 
+  // contains an object indicating if there are more results  [moreResults]
+  // and provides a token to paginate through the results [endCursor]. 
+
+  // The reason for the item.id is that we want to 
+  // know which question a student has answered (using the 
+  // Entity's key gives a unique id) and to avoid giving the 
+  // answer away in the JSON data.
+  // Cloud Datastore references an entity's key using an 
+  // ECMAScript symbol named Datastore.KEY. 
+  // One way to reshape the data is to use the JavaScript
+  // array map(...) method to apply the modification to each 
+  // element in the array.
+
+  // This will  pass the set of transformed entities back 
+  // from the model to the client - in this case the Quiz 
+  // application's API
+
+// [START exports]
+module.exports = {
+  create,
+  list
+};
+// [END exports]

@@ -1,0 +1,8 @@
+# Save the Docker file and the code in a directory, then create image
+eg.
+drwxr-xr-x  5 lisa lisa 4096 May  7 04:06 cookbook/
+-rw-r--r--  1 lisa lisa   47 May  7 04:07 Dockerfile
+
+gcloud builds submit --tag us-central1-docker.pkg.dev/guinn-recipes/guinn-recipes/cookbookui:v1
+
+# Edit the yaml for the appropriate version of the appropriate
