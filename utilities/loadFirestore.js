@@ -5,10 +5,14 @@
 // categories.txt => Kind: Category
 // recipes.txt => Kind: Recipe with ancestor: Category
 
+'use strict';
+
 const fs = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
 const os = require('os');
+const config = require('config');
+const {Firestore} = require('@google-cloud/firestore');
 
 function Recipe(id = '', cat = [], directions = '', ingredients = '', tags = [], title = '',
             notes = '', servings = '', source = '', time = '', introduction = '', yieldQty = '')  {
@@ -130,6 +134,9 @@ function getArray(inputStr) {
 }
 
 function storeData(recipe, key, text) {
+    if (!recipe) {
+        console.log('No recipe! key=', key, ' text=', text);
+    }
     switch (key) {
         case 'id':
             recipe.id = text.toLowerCase();
@@ -147,7 +154,7 @@ function storeData(recipe, key, text) {
             recipe.notes = text;
             break;
         case 'servings':
-            this.servings = text;
+            recipe.servings = text;
             break;
         case 'source':
             recipe.source = text;
@@ -171,10 +178,12 @@ var categories = [];
 var tags = [];
 var data = [];
 var i;
-inBlock = false;                    // used to track when we are in the middle of a multiline-block
-currentText = '';
-currentKey = '';
-currentArray = [];
+var pos;
+var inBlock = false;                    // used to track when we are in the middle of a multiline-block
+var currentText = '';
+var currentKey = '';
+var currentArray = [];
+var currentRecipe = null;
 
 var filename = path.join(__dirname, '/categories.txt');
 try {
@@ -185,7 +194,7 @@ try {
 }
 
 for (i=0; i<data.length; i++) {
-    cat = new Category(data[i].id, data[i].name);
+    var cat = new Category(data[i].id, data[i].name);
     categories.push(cat);
 }
 
@@ -206,8 +215,10 @@ for (i=0; i<data.length; i++) {
                 addTag(element);
             });
         }
-        // start a new recipe
-        currentRecipe = new Recipe();
+        // start a new recipe - unless this is the last line of data
+        if (i < (data.length - 1)) {
+            currentRecipe = new Recipe();
+        }
     }
     else {
         if (inBlock) {
@@ -262,10 +273,52 @@ for (i=0; i<recipes.length; i++) {
     });
 }
 
+console.log(categories.length, ' categories, ', recipes.length, ' recipes, ', tags.length, ' tags');
+
+const fs = new Firestore( { projectId: 'guinn-recipes' } );
+
+// upload tags
+const collection = 'Tag';
+
 tags.forEach(element => {
-    console.log(element);
+    const item = {
+        name: element
+    };
+
+    const res = await db.collection(collection).add(item); // uses a generated id
 });
 
-//console.log(categories.length, ' categories, ', recipes.length, ' recipes, ', tags.length, ' tags');
+// upload categories
+const collection = 'Category';
 
+categories.forEach(element => {
+    const item = {
+        id: element.id,
+        name: element.name
+    };
 
+    const res = await db.collection(collection).doc(element.id).set(item);
+});
+
+// upload recipes
+const collection = 'Recipe';
+
+recipes.forEach(element => {
+    const item = {
+        id : element.id,
+        categories : element.categories,
+        directions : element.directions,
+        ingredients : element.ingredients,
+        tags : element.tags,
+        title : element.title,
+        notes : element.notes,
+        servings : element.servings,
+        source : element.source,
+        time : element.time,
+        introduction : element.introduction,
+        yield : element.yieldQty,
+        contributor : 'lguinn'
+    };
+
+    const res = await db.collection(collection).doc(element.id).set(item);
+});
