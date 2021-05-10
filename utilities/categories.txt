@@ -1,21 +1,66 @@
-"appetizerssnacks", "Appetizers, Snacks and Party Food" 
-"basics", "Basics, Sauces and Miscellaneous"
-"beansandpeas", "Dried Beans and Peas"
-"beef", "Beef"
-"cakesandpies", "Cakes and Pies"
-"cheeseandeggs", "Cheese and Eggs"
-"chicken", "Chicken and Poultry"
-"cookiesandbars", "Cookies and Bars"
-"desserts", "desserts"
-"favorites" , "Favorites"
-"indian", "Indian Cooking"
-"pasta", "Pasta"
-"pork", "Pork"
-"quickbreads", "Quick Breads"
-"riceandgrains", "Rice and Grains"
-"salads", "Salads and Dressings"
-"seafood", "Fish and Seafood"
-"soups", "Soups and Stews"
-"thanksgiving","Thanksgiving Recipes"
-"vegetables", "Vegetables"
-"yeastbreads", "Yeast Breads"
+---
+id : "appetizerssnacks" 
+name : "Appetizers and Snacks" 
+---
+id : "basics" 
+name : "Basics, Sauces and Miscellaneous"
+---
+id : "beansandpeas" 
+name : "Dried Beans and Peas"
+---
+id : "beef" 
+name : "Beef"
+---
+id : "cakesandpies" 
+name : "Cakes and Pies"
+---
+id : "cheeseandeggs" 
+name : "Cheese and Eggs"
+---
+id : "chicken" 
+name : "Chicken and Poultry"
+---
+id : "cookiesandbars" 
+name : "Cookies and Bars"
+---
+id : "desserts" 
+name : "desserts"
+---
+id : "favorites" 
+name : "Favorites"
+---
+id : "indian" 
+name : "Indian Cooking"
+---
+id : "pasta" 
+name : "Pasta"
+---
+id : "pork" 
+name : "Pork"
+---
+id : "potatoes" 
+name : "Potatoes"
+---
+id : "quickbreads" 
+name : "Quick Breads"
+---
+id : "riceandgrains" 
+name : "Rice and Grains"
+---
+id : "salads" 
+name : "Salads and Dressings"
+---
+id : "seafood" 
+name : "Fish and Seafood"
+---
+id : "soups" 
+name : "Soups and Stews"
+---
+id : "thanksgiving" 
+name : "Thanksgiving Recipes"
+---
+id : "vegetables" 
+name : "Vegetables"
+---
+id : "yeastbreads" 
+name : "Yeast Breads"

@@ -1,36 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: cookbook
-    version: v1
-  name: cookbook
+  name: cookbookui
   namespace: default
+  labels:
+    app: cookbookui
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cookbook
+      app: cookbookui
       version: v1
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
+    metadata:
       labels:
-        app: cookbook
+        app: cookbookui
         version: v1
     spec:
       containers:
-      - image: us-west2-docker.pkg.dev/guinn-recipes/guinn-recipes/cookbookui:v1
-        name: cookbookui-1
-        resources:
-          limits:
-            cpu: 500m
-            ephemeral-storage: 1Gi
-            memory: 2Gi
-          requests:
-            cpu: 500m
-            ephemeral-storage: 1Gi
-            memory: 2Gi
+      - name: "cookbookui"
+        image: "us-west2-docker.pkg.dev/guinn-recipes/guinn-recipes/cookbookui@sha256:d01f94c08c16108e58bbe1248dfdd4e646009189d5d4ef07051d4643468a190f"

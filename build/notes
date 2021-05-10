@@ -3,6 +3,11 @@ eg.
 drwxr-xr-x  5 lisa lisa 4096 May  7 04:06 cookbook/
 -rw-r--r--  1 lisa lisa   47 May  7 04:07 Dockerfile
 
-gcloud builds submit --tag us-central1-docker.pkg.dev/guinn-recipes/guinn-recipes/cookbookui:v1
+gcloud config set project guinn-recipes
 
-# Edit the yaml for the appropriate version of the appropriate
+gcloud builds submit --tag us-west2-docker.pkg.dev/guinn-recipes/guinn-recipes/cookbookui:v1
+
+# Edit the yaml for the appropriate version of the image
+
+
+kubectl expose deployment cookbookui --port=80 --target-port=80 --type=LoadBalancer --name=cookbookui-service
