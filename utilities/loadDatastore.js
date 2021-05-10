@@ -9,27 +9,27 @@
 
 'use strict';
 
-const config = require('config');
-const {Datastore} = require('@google-cloud/datastore');
+//const config = require('config');
+const { Datastore } = require('@google-cloud/datastore');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
 const os = require('os');
 
 function Recipe(id = '', cat = [], directions = '', ingredients = '', tags = [], title = '',
-            notes = '', servings = '', source = '', time = '', introduction = '', yieldQty = '')  {
-        this.id = id.toLowerCase();
-        this.categories = categories;
-        this.directions = directions;
-        this.ingredients = ingredients;
-        this.tags = tags;
-        this.title = title;
-        this.notes = notes;
-        this.servings = servings;
-        this.source = source;
-        this.time = time;
-        this.introduction = introduction;
-        this.yieldQty = yieldQty;
+    notes = '', servings = '', source = '', time = '', introduction = '', yieldQty = '') {
+    this.id = id.toLowerCase();
+    this.categories = categories;
+    this.directions = directions;
+    this.ingredients = ingredients;
+    this.tags = tags;
+    this.title = title;
+    this.notes = notes;
+    this.servings = servings;
+    this.source = source;
+    this.time = time;
+    this.introduction = introduction;
+    this.yieldQty = yieldQty;
 }
 
 function Category(id, name) {
@@ -39,7 +39,7 @@ function Category(id, name) {
 
 function categoryExists(catName) {
     var i;
-    for (i=0; i < categories.length; i++) {
+    for (i = 0; i < categories.length; i++) {
         if (catName == categories[i].id) {
             return true;
         }
@@ -56,13 +56,13 @@ function addTag(inputStr) { // adds the tag if it doesn't exist
 
 function getKey(inputStr) {
     var endPos = inputStr.search(":");
-    if (endPos < 0) {             // not found
+    if (endPos < 0) { // not found
         return null;
     }
     var startPos = 0;
     endPos = endPos - 1;
     if (endPos >= startPos) {
-        return inputStr.slice(startPos,endPos);
+        return inputStr.slice(startPos, endPos);
     }
     return null;
 }
@@ -79,10 +79,9 @@ function getText(inputStr) {
     startPos = startPos + 6;
     var newString = inputStr.slice(startPos);
     var endPos = newString.search("</TEXT>");
-    if (endPos > 0 ) {
-        return newString.slice(0, endPos);  
-    }
-    else {
+    if (endPos > 0) {
+        return newString.slice(0, endPos);
+    } else {
         if (newString == '</TEXT>') {
             return '';
         }
@@ -99,7 +98,7 @@ function getArray(inputStr) {
     startPos = startPos + 1;
     var newString = inputStr.slice(startPos);
     var endPos = newString.search("]");
-    if (endPos < 0 ) {
+    if (endPos < 0) {
         console.log('malformed array = ', inputStr);
         return null;
     }
@@ -171,7 +170,7 @@ function storeData(recipe, key, text) {
             recipe.yieldQty = text;
             break;
         default:
-            console.log('Unknown key ' + key + ' text: ' + text);  
+            console.log('Unknown key ' + key + ' text: ' + text);
     }
 }
 
@@ -180,23 +179,22 @@ var categories = [];
 var tags = [];
 var data = [];
 var i;
-var pos = 0;
-var inBlock = false;                    // used to track when we are in the middle of a multiline-block
+var inBlock = false; // used to track when we are in the middle of a multiline-block
 var currentText = '';
 var currentKey = '';
 var currentArray = [];
-var currentRecipe = null;
+var currentRecipe;
 
 var filename = path.join(__dirname, '/categories.txt');
 try {
-  const fileContents = fs.readFileSync(filename, 'utf8');
-  data = yaml.loadAll(fileContents);
+    const fileContents = fs.readFileSync(filename, 'utf8');
+    data = yaml.loadAll(fileContents);
 } catch (err) {
-  console.error(err)
+    console.error(err)
 }
 
 var cat;
-for (i=0; i<data.length; i++) {
+for (i = 0; i < data.length; i++) {
     cat = new Category(data[i].id, data[i].name);
     categories.push(cat);
 }
@@ -205,58 +203,62 @@ var filename = path.join(__dirname, '/recipes.txt');
 try {
     //data = fs.readFileSync(filename, 'utf8');
     data = String(fs.readFileSync(filename)).split(os.EOL);
-  } catch (err) {
+} catch (err) {
     console.error(err);
-  }
+}
 
-for (i=0; i<data.length; i++) {
+var pos = 0;
+
+for (i = 0; i < data.length; i++) {
     if (data[i] == '---') {
-        if (i > 0) {    
+        if (i > 0) {
             // store the last recipe unless this is the first item
             recipes.push(currentRecipe);
             currentRecipe.tags.forEach(element => {
                 addTag(element);
             });
         }
-        // start a new recipe
-        currentRecipe = new Recipe();
-    }
-    else {
+        // start a new recipe - unless this is the last line of data
+        if (i < (data.length - 1)) {
+            currentRecipe = new Recipe();
+        }
+    } else {
         if (inBlock) {
             // Get text and check for block end
             pos = data[i].search("</TEXT>");
             if (pos < 0) {
                 // not at the end of the text yet, just append this line to the text
                 currentText = currentText + ' ' + data[i];
-            }
-            else {
-                if (pos > 1) {  // Don't bother unless there is more than </TEXT> on this line
-                    currentText = currentText + ' ' + data[i].slice(0,pos);
+            } else {
+                if (pos > 1) { // Don't bother unless there is more than </TEXT> on this line
+                    currentText = currentText + ' ' + data[i].slice(0, pos);
                 }
                 storeData(currentRecipe, currentKey, currentText);
                 currentKey = '';
                 currentText = '';
                 inBlock = false;
             }
-        }
-        else { // not in the middle of a block and not ---, should be a key
-            currentKey = getKey(data[i]);  
+        } else { // not in the middle of a block and not ---, should be a key
+            currentKey = getKey(data[i]);
             if (currentKey == 'categories' || currentKey == 'tags') { // the value must be array
                 currentArray = getArray(data[i]);
-                if (currentKey == 'categories') { currentRecipe.categories = currentArray; }
-                if (currentKey == 'tags') { currentRecipe.tags = currentArray; } 
+                if (currentKey == 'categories') {
+                    currentRecipe.categories = currentArray;
+                }
+                if (currentKey == 'tags') {
+                    currentRecipe.tags = currentArray;
+                }
                 currentKey = '';
                 currentText = '';
                 inBlock = false;
             } else { // the value is text
                 currentText = getText(data[i]);
-                if (data[i].search("</TEXT>") > 0 ) {   // this is a single line item and we are done
+                if (data[i].search("</TEXT>") > 0) { // this is a single line item and we are done
                     storeData(currentRecipe, currentKey, currentText);
                     currentKey = '';
                     currentText = '';
                     inBlock = false;
-                }
-                else {
+                } else {
                     inBlock = true;
                 }
             }
@@ -267,7 +269,7 @@ for (i=0; i<data.length; i++) {
 // time to add this to the Datastore
 
 //const ds = new Datastore( { projectId: config.get('GCLOUD_PROJECT') } );
-const ds = new Datastore( { projectId: 'guinn-recipes' } );
+const ds = new Datastore({ projectId: 'guinn-recipes' });
 
 console.log('Adding tags');
 tags.forEach(element => {
@@ -279,14 +281,16 @@ tags.forEach(element => {
     const entity = {
         key: key,
         data: {
-            name : element
+            name: element
         }
     };
-    
-    datastore.insert(entity).then(() => {
-        // Task inserted successfully.
-      });
 
+    ds.save(entity, (err, apiResponse) => {
+        if (err) {
+            console.log(key.path, err);
+            console.log(apiResponse);
+        }
+    });
 });
 
 console.log('Adding categories');
@@ -294,56 +298,60 @@ categories.forEach(element => {
     const key = ds.key({
         namespace: 'Guinn',
         path: ['Category', element.id]
-      });
+    });
 
-      const entity = {
+    const entity = {
         key: key,
         data: {
-            id : element.id,
-            name : element.name
+            id: element.id,
+            name: element.name
         }
-      };
-      
-      ds.save(entity, err => {
-        if (err) return console.log(key.path, err);
-      });
-});
+    };
 
+    ds.save(entity, (err, apiResponse) => {
+        if (err) {
+            console.log(key.path, err);
+            console.log(apiResponse);
+        }
+    });
+});
 
 console.log('Adding recipes');
 recipes.forEach(element => {
     const key = ds.key({
         namespace: 'Guinn',
         path: ['Recipe', element.id]
-      });
-      
-      const entity = {
+    });
+
+    const entity = {
         key: key,
         excludeFromIndexes: [
             'introduction',
             'directions',
             'ingredients',
             'notes'
-          ],
+        ],
         data: {
-            id : element.id,
-            categories : element.categories,
-            directions : element.directions,
-            ingredients : element.ingredients,
-            tags : element.tags,
-            title : element.title,
-            notes : element.notes,
-            servings : element.servings,
-            source : element.source,
-            time : element.time,
-            introduction : element.introduction,
-            yield : element.yieldQty
+            id: element.id,
+            categories: element.categories,
+            directions: element.directions,
+            ingredients: element.ingredients,
+            tags: element.tags,
+            title: element.title,
+            notes: element.notes,
+            servings: element.servings,
+            source: element.source,
+            time: element.time,
+            introduction: element.introduction,
+            yield: element.yieldQty,
+            contributor: 'lguinn'
         }
-      };
-      
-      ds.save(entity, (err) => {
-        console.log(key.path, err); 
-      });
-});
+    };
 
-  
+    ds.save(entity, (err, apiResponse) => {
+        if (err) {
+            console.log(key.path, err);
+            console.log(apiResponse);
+        }
+    });
+});
