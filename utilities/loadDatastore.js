@@ -9,7 +9,7 @@
 
 'use strict';
 
-const config = require('../config');
+const config = require('config');
 const {Datastore} = require('@google-cloud/datastore');
 const fs = require('fs');
 const yaml = require('js-yaml');
@@ -136,6 +136,9 @@ function getArray(inputStr) {
 }
 
 function storeData(recipe, key, text) {
+    if (!recipe) {
+        console.log('No recipe! key=', key, ' text=', text);
+    }
     switch (key) {
         case 'id':
             recipe.id = text.toLowerCase();
@@ -153,7 +156,7 @@ function storeData(recipe, key, text) {
             recipe.notes = text;
             break;
         case 'servings':
-            this.servings = text;
+            recipe.servings = text;
             break;
         case 'source':
             recipe.source = text;
@@ -177,10 +180,12 @@ var categories = [];
 var tags = [];
 var data = [];
 var i;
-inBlock = false;                    // used to track when we are in the middle of a multiline-block
-currentText = '';
-currentKey = '';
-currentArray = [];
+var pos = 0;
+var inBlock = false;                    // used to track when we are in the middle of a multiline-block
+var currentText = '';
+var currentKey = '';
+var currentArray = [];
+var currentRecipe = null;
 
 var filename = path.join(__dirname, '/categories.txt');
 try {
@@ -190,6 +195,7 @@ try {
   console.error(err)
 }
 
+var cat;
 for (i=0; i<data.length; i++) {
     cat = new Category(data[i].id, data[i].name);
     categories.push(cat);
@@ -260,31 +266,32 @@ for (i=0; i<data.length; i++) {
 
 // time to add this to the Datastore
 
-const ds = new Datastore( { projectId: config.get('GCLOUD_PROJECT') } );
+//const ds = new Datastore( { projectId: config.get('GCLOUD_PROJECT') } );
+const ds = new Datastore( { projectId: 'guinn-recipes' } );
 
 console.log('Adding tags');
 tags.forEach(element => {
-    const key = datastore.key({
+    const key = ds.key({
         namespace: 'Guinn',
         path: ['Tag']
-      });
+    });
 
-      const entity = {
+    const entity = {
         key: key,
         data: {
             name : element
         }
-      };
-      
-      datastore.save(entity, (err) => {
-        console.log(key.path); 
-        console.log(key.namespace);
+    };
+    
+    datastore.insert(entity).then(() => {
+        // Task inserted successfully.
       });
+
 });
 
 console.log('Adding categories');
 categories.forEach(element => {
-    const key = datastore.key({
+    const key = ds.key({
         namespace: 'Guinn',
         path: ['Category', element.id]
       });
@@ -297,15 +304,15 @@ categories.forEach(element => {
         }
       };
       
-      datastore.save(entity, (err) => {
-        console.log(key.path); 
-        console.log(key.namespace);
+      ds.save(entity, err => {
+        if (err) return console.log(key.path, err);
       });
 });
 
+
 console.log('Adding recipes');
 recipes.forEach(element => {
-    const key = datastore.key({
+    const key = ds.key({
         namespace: 'Guinn',
         path: ['Recipe', element.id]
       });
@@ -334,9 +341,8 @@ recipes.forEach(element => {
         }
       };
       
-      datastore.save(entity, (err) => {
-        console.log(key.path); 
-        console.log(key.namespace);
+      ds.save(entity, (err) => {
+        console.log(key.path, err); 
       });
 });
 
